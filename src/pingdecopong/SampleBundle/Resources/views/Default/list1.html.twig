@@ -1,1 +1,34 @@
-aaa
+{% extends "::base.html.twig" %}
+
+{% block title %}list1{% endblock %}
+
+{% block body %}
+<h1>list1</h1>
+<form action="{{ path('list1') }}" method="get" {{ form_enctype(form) }} novalidate name="list1" id="list1">
+
+    {{ form_widget(form) }}
+
+    <div>
+        {% for page in pager.PageNo.Rows %}
+            {% if page.select %}
+                {{ page.label }}
+            {% else %}
+                <a href="#" onclick="pagenoClick('{{ page.pageNo }}')">{{ page.label }}</a>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+</form>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        //<![CDATA[
+        function pagenoClick(pageno){
+            $('#{{ form.basicpager.pageNo.vars.id }}').val(pageno);
+            $('#list1').submit();
+        }
+        //]]>
+    </script>
+{% endblock %}
