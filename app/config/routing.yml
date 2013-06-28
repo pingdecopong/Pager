@@ -1,0 +1,10 @@
+pingdecopong_sample:
+    resource: "@pingdecopongSampleBundle/Controller/"
+    type:     annotation
+    prefix:   /sample
+
+pingdecopong_pager:
+    resource: "@pingdecopongPagerBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
