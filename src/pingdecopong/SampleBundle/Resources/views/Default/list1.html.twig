@@ -8,6 +8,46 @@
 
     {{ form_widget(form) }}
 
+    {{ pdp_pager_render() }}
+
+    <table>
+        <thead>
+        <tr>
+            {% for header in column.Rows %}
+                <th>
+
+                    {% if header.Enable %}
+
+
+                        {% if header.sortSelected %}
+                            {% if header.SortType == 'asc' %}
+                                <a href="#" onclick="changeSortType('{{ header.keyName }}', 'desc')">
+                                    {{ header.label }}↓
+                                </a>
+                            {% elseif header.SortType == 'desc' %}
+                                <a href="#" onclick="changeSortType('{{ header.keyName }}', 'asc')">
+                                    {{ header.label }}↑
+                                </a>
+                            {% endif %}
+                        {% else %}
+                            <a href="#" onclick="changeSortType('{{ header.keyName }}', 'asc')">
+                                {{ header.label }}
+                            </a>
+                        {% endif %}
+                    {% else %}
+                        {{ header.label }}
+                    {% endif %}
+                </th>
+            {% endfor %}
+
+        </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+
+
     <div>
         {% for page in pager.PageNo.Rows %}
             {% if page.select %}
@@ -26,7 +66,12 @@
     <script type="text/javascript">
         //<![CDATA[
         function pagenoClick(pageno){
-            $('#{{ form.basicpager.pageNo.vars.id }}').val(pageno);
+            $('#{{ form.pagerselector.pageNo.vars.id }}').val(pageno);
+            $('#list1').submit();
+        }
+        function changeSortType(sortName, sortType){
+            $('#{{ form.pagercolumn.sortName.vars.id }}').val(sortName);
+            $('#{{ form.pagercolumn.sortType.vars.id }}').val(sortType);
             $('#list1').submit();
         }
         //]]>

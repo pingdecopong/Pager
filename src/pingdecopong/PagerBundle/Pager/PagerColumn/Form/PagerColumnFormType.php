@@ -3,8 +3,13 @@
 
 namespace pingdecopong\PagerBundle\Pager\PagerColumn\Form;
 
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class PagerColumnFormType {
+class PagerColumnFormType extends AbstractType {
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -30,13 +35,13 @@ class PagerColumnFormType {
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'System\CompasBundle\Lib\Pager\BasicColumn\BasicColumnFormModel'
+            'data_class' => 'pingdecopong\PagerBundle\Pager\PagerColumn\Form\PagerColumnFormModel'
         ));
     }
 
     public function getName()
     {
-        return 'basiccolumn';
+        return 'pagercolumn';
     }
 
 }

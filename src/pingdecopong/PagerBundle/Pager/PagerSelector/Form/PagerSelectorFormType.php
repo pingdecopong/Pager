@@ -98,7 +98,7 @@ class PagerSelectorFormType extends AbstractType {
 
     public function getName()
     {
-        return 'basicpager';
+        return 'pagerselector';
     }
 
 }

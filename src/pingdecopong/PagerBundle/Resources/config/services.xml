@@ -4,17 +4,12 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
-    <!--
-    <parameters>
-        <parameter key="pingdecopong_pager.example.class">pingdecopong\PagerBundle\Example</parameter>
-    </parameters>
-
     <services>
-        <service id="pingdecopong_pager.example" class="%pingdecopong_pager.example.class%">
-            <argument type="service" id="service_id" />
-            <argument>plain_value</argument>
-            <argument>%parameter_name%</argument>
+        <service id="pingdecopong_pager.twig.extension.pager" class="pingdecopong\PagerBundle\Twig\Extension\PagerExtension">
+            <argument type="service" id="templating.helper.router" />
+            <argument type="service" id="translator" />
+            <tag name="twig.extension" />
         </service>
     </services>
-    -->
+
 </container>
