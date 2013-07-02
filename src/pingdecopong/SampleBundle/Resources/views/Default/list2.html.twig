@@ -2,18 +2,24 @@
 
 {% block title %}list2{% endblock %}
 
+{% block aaaa %}
+    bbbb
+{% endblock aaaa %}
+
 {% block body %}
 <h1>list2</h1>
 <form action="{{ path('list2') }}" method="get" {{ form_enctype(form) }} novalidate name="list2" id="list2">
 
 
-
+    {{ pdp_pager_render(pager) }}
 
 
 
 
 </form>
 {% endblock %}
+
+
 
 {% block javascripts %}
 

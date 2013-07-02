@@ -68,5 +68,20 @@ class Pager {
         return $formBuilder;
     }
 
+    public function createView()
+    {
+        $pagerView = new PagerView();
+
+        //pagerColumn
+        $pagerColumnView = $this->pagerColumn->createView();
+        $pagerView->setPagerColumn($pagerColumnView);
+
+        //pagerSelector
+        $pagerSelectorView = $this->pagerSelector->createView();
+        $pagerView->setPagerSelector($pagerSelectorView);
+
+        return $pagerView;
+    }
+
 
 }

@@ -27,9 +27,11 @@ class PagerExtension  extends \Twig_Extension
         );
     }
 
-    public function pagerRender()
+    public function pagerRender($pager)
     {
-
+        $data = array();
+        $data['pager'] = $pager;
+        return $this->environment->render('pingdecopongPagerBundle:Pager:defaultSelector.html.twig', $data);
     }
 //    public function pagerRender($pagination, $template = null, array $queryParams = array(), array $viewParams = array())
 //    {

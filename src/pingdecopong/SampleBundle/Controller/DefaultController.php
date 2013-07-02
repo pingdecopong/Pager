@@ -87,6 +87,7 @@ class DefaultController extends Controller
 
         return array(
             'form' => $form->createView(),
+            'pager' => $pager->createView(),
         );
     }
 

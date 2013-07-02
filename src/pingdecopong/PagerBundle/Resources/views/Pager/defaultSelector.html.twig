@@ -1,0 +1,11 @@
+{# default selector #}
+
+<div class="pdp_pager">
+    {% for page in pager.PagerSelector.PageNo.Rows %}
+        {% if page.select %}
+            {{ page.label }}
+        {% else %}
+            <a href="#" >{{ page.label }}</a>
+        {% endif %}
+    {% endfor %}
+</div>
