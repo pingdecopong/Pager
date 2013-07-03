@@ -1,0 +1,29 @@
+{# default column #}
+
+<thead>
+    <tr>
+        {% for header in pager.PagerColumn.Rows %}
+            <th>
+                {% if header.Enable %}
+                    {% if header.sortSelected %}
+                        {% if header.SortType == 'asc' %}
+                            <a href="#" >
+                                {{ header.label }}↓
+                            </a>
+                        {% elseif header.SortType == 'desc' %}
+                            <a href="#" >
+                                {{ header.label }}↑
+                            </a>
+                        {% endif %}
+                    {% else %}
+                        <a href="#" >
+                            {{ header.label }}
+                        </a>
+                    {% endif %}
+                {% else %}
+                    {{ header.label }}
+                {% endif %}
+            </th>
+        {% endfor %}
+    </tr>
+</thead>

@@ -16,6 +16,23 @@ class Pager {
 
     private $pagerSelector;
     private $pagerColumn;
+    private $formView;
+
+    /**
+     * @param mixed $formView
+     */
+    public function setFormView($formView)
+    {
+        $this->formView = $formView;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFormView()
+    {
+        return $this->formView;
+    }
 
     /**
      * @var int
@@ -79,6 +96,9 @@ class Pager {
         //pagerSelector
         $pagerSelectorView = $this->pagerSelector->createView();
         $pagerView->setPagerSelector($pagerSelectorView);
+
+        //form view
+        $pagerView->setFormView($this->getFormView());
 
         return $pagerView;
     }

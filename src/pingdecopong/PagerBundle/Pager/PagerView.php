@@ -14,6 +14,7 @@ class PagerView {
 
     private $pagerSelector;
     private $pagerColumn;
+    private $formView;
 
     /**
      * @param mixed $pagerColumn
@@ -45,6 +46,22 @@ class PagerView {
     public function getPagerSelector()
     {
         return $this->pagerSelector;
+    }
+
+    /**
+     * @param mixed $formView
+     */
+    public function setFormView($formView)
+    {
+        $this->formView = $formView;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFormView()
+    {
+        return $this->formView;
     }
 
 }

@@ -10,11 +10,15 @@
 <h1>list2</h1>
 <form action="{{ path('list2') }}" method="get" {{ form_enctype(form) }} novalidate name="list2" id="list2">
 
+{#
+    {{ pdp_pager_hidden_render(pager) }}
 
-    {{ pdp_pager_render(pager) }}
+    {{ pdp_pager_column_render(pager) }}
+    {{ pdp_pager_selector_render(pager) }}
+    {{ pdp_pager_pagesize_render(pager) }}
+#}
 
-
-
+    {{ form_widget(form) }}
 
 </form>
 {% endblock %}
