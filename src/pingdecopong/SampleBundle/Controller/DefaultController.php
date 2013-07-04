@@ -7,10 +7,13 @@ use pingdecopong\PagerBundle\Pager\PagerColumn\PagerColumn;
 use pingdecopong\PagerBundle\Pager\PagerSelector\PagerSelector;
 use pingdecopong\SampleBundle\Form\Search\SearchFormModel;
 use pingdecopong\SampleBundle\Form\Search\SearchFormType;
+use pingdecopong\SampleBundle\Form\Search\TestModel;
+use pingdecopong\SampleBundle\Form\Search\TestType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\Request;
 
 class DefaultController extends Controller
@@ -84,12 +87,29 @@ class DefaultController extends Controller
             ));
         $pager->setAllCount(38);
 
+/*
+        $form = $this->createFormBuilder(null, array('csrf_protection' => false))
+            ->add('search', new TestType())
+            ->getForm();
+        $form->bind($request);
+//        $form->submit(array());
+        $formView = $form->createView();
+*/
+/*
+        $formModel = new TestModel();
+        $formType = new TestType();
+        $builder = $this->get('form.factory')->createBuilder($formType, $formModel);
+        $form = $builder->getForm();
+        $formView = $form->createView();
+*/
+/*
         $form = $this->createFormBuilder(null, array('csrf_protection' => false))
             ->add('search', new SearchFormType())
             ->getForm();
-//        $form->bind($request);
+        $form->bind($request);
 //        $form->submit(array());
         $formView = $form->createView();
+*/
 /*
         //form
         $form = $formFactory->createBuilder('form', new SearchFormType(), array('csrf_protection' => false))
@@ -97,15 +117,34 @@ class DefaultController extends Controller
         $form->bind($request);
         $formView = $form->createView();
 */
-/*
+
         $form = $formFactory->createBuilder('form', null, array('csrf_protection' => false))
-//            ->add($pager->getFormBuilder())
-            ->add('forma', new SearchFormType())
+            ->add($pager->getFormBuilder())
+            ->add('search', new SearchFormType())
             ->getForm();
+
         $form->bind($request);
         $formView = $form->createView();
-*/
-//        $pager->setFormView($formView['form']);
+        $pager->setAllFormView($formView);
+        $pager->setPagerFormView($formView['form']);
+
+        $data = array();
+        $a = $this->generateQueryArray($formView, $data);
+        $data2 = array();
+        $this->getPagerFormQueryNames($formView['form'] ,$data2);
+
+
+        $e = $formView->vars['value'];
+
+//        for($i=0; $i < 10; $i++)
+//        {
+//            $d = $form->createView();
+//        }
+
+//        $a = $form->getNormData();
+//        $b = $form->getViewData();
+
+//        $c = $formView->getIterator();
 
 //        $form = $pager->getFormBuilder()->getForm();
 //        $form->bind($request);
@@ -117,10 +156,56 @@ class DefaultController extends Controller
 
         return array(
             'form' => $formView,
-//            'pager' => $pager->createView(),
+            'pager' => $pager->createView(),
         );
     }
 
+    public function generateQueryArray(FormView $formView, &$queryArray)
+    {
+        if(count($formView) == 0)
+        {
+            $queryArray[urlencode($formView->vars['full_name'])] = $formView->vars['value'];
+        }else
+        {
+            foreach($formView as $value)
+            {
+                $this->generateQueryArray($value, $queryArray);
+            }
+        }
+        return $queryArray;
+    }
+    public function getPagerFormQueryNames(FormView $pagerFormView, &$queryArray)
+    {
+        if(count($pagerFormView) == 0)
+        {
+            $queryArray[$pagerFormView->vars['name']] = urlencode($pagerFormView->vars['full_name']);
+        }else
+        {
+            foreach($pagerFormView as $value)
+            {
+                $this->getPagerFormQueryNames($value, $queryArray);
+            }
+        }
+        return $queryArray;
+    }
+/*
+    public function generateQueryString(FormView $allFormView, FormView $pagerFormView, $queryString, $pageNo, $pageSize, $sortName, $sortType)
+    {
+        $query = "";
+        if(count($allFormView) == 0)
+        {
+            $query = $allFormView->vars['full_name'] .'='. $allFormView->vars['value'];
+            $queryString .= $query;
+
+        }else
+        {
+            foreach($allFormView as $value)
+            {
+            }
+        }
+
+    }
+*/
     public function getFormDataArray(Form $form)
     {
         $ret = array();

@@ -6,6 +6,7 @@ namespace pingdecopong\PagerBundle\Pager;
 use pingdecopong\PagerBundle\Pager\PagerColumn\PagerColumn;
 use pingdecopong\PagerBundle\Pager\PagerSelector\PagerSelector;
 use Symfony\Component\Form\FormFactory;
+use Symfony\Component\Form\FormView;
 
 class Pager {
 
@@ -16,22 +17,40 @@ class Pager {
 
     private $pagerSelector;
     private $pagerColumn;
-    private $formView;
+
+    private $allFormView;
+    private $pagerFormView;
 
     /**
-     * @param mixed $formView
+     * @param mixed $allFormView
      */
-    public function setFormView($formView)
+    public function setAllFormView($allFormView)
     {
-        $this->formView = $formView;
+        $this->allFormView = $allFormView;
     }
 
     /**
      * @return mixed
      */
-    public function getFormView()
+    public function getAllFormView()
     {
-        return $this->formView;
+        return $this->allFormView;
+    }
+
+    /**
+     * @param mixed $pagerFormView
+     */
+    public function setPagerFormView($pagerFormView)
+    {
+        $this->pagerFormView = $pagerFormView;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPagerFormView()
+    {
+        return $this->pagerFormView;
     }
 
     /**
@@ -98,10 +117,44 @@ class Pager {
         $pagerView->setPagerSelector($pagerSelectorView);
 
         //form view
-        $pagerView->setFormView($this->getFormView());
+        $pagerView->setFormView($this->getPagerFormView());
+
+        //set query param
+        $queryAllData = array();
+        $this->generateQueryArray($this->getAllFormView(), $queryAllData);
+        $queryPagerData = array();
+        $this->getPagerFormQueryNames($this->getPagerFormView() ,$queryPagerData);
 
         return $pagerView;
     }
 
+    private function generateQueryArray(FormView $formView, &$queryArray)
+    {
+        if(count($formView) == 0)
+        {
+            $queryArray[urlencode($formView->vars['full_name'])] = $formView->vars['value'];
+        }else
+        {
+            foreach($formView as $value)
+            {
+                $this->generateQueryArray($value, $queryArray);
+            }
+        }
+        return $queryArray;
+    }
+    private  function getPagerFormQueryNames(FormView $pagerFormView, &$queryArray)
+    {
+        if(count($pagerFormView) == 0)
+        {
+            $queryArray[$pagerFormView->vars['name']] = urlencode($pagerFormView->vars['full_name']);
+        }else
+        {
+            foreach($pagerFormView as $value)
+            {
+                $this->getPagerFormQueryNames($value, $queryArray);
+            }
+        }
+        return $queryArray;
+    }
 
 }

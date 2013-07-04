@@ -3,7 +3,7 @@ namespace pingdecopong\SampleBundle\Form\Search;
 
 class SearchFormModel {
 
-    private $name;
+    private  $name;
 
     /**
      * @param mixed $name
@@ -20,5 +20,6 @@ class SearchFormModel {
     {
         return $this->name;
     }
+
 
 }
