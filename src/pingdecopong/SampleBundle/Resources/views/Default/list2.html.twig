@@ -15,9 +15,9 @@
     {{ pdp_pager_selector_render(pager) }}
     {{ pdp_pager_pagesize_render(pager) }}
 
-{#
-    {{ form_widget(form) }}
-#}
+
+    {{ form_widget(form.search) }}
+
 
 </form>
 {% endblock %}

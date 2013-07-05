@@ -12,6 +12,23 @@ class PagerColumnRowView {
     private $enable;
     private $sortSelected;
     private $sortType;
+    private $query;
+
+    /**
+     * @param mixed $query
+     */
+    public function setQuery($query)
+    {
+        $this->query = $query;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getQuery()
+    {
+        return $this->query;
+    }
 
     /**
      * @param mixed $keyName

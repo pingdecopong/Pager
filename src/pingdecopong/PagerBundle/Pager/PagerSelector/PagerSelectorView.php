@@ -12,16 +12,24 @@ namespace pingdecopong\PagerBundle\Pager\PagerSelector;
 
 class PagerSelectorView {
 
-
+    /**
+     * @var \pingdecopong\PagerBundle\Pager\PagerSelector\PagerSelectorNoView
+     */
     private $pageNo;
 
     private $pageSize;
 
+    /**
+     * @param \pingdecopong\PagerBundle\Pager\PagerSelector\PagerSelectorNoView $pageNo
+     */
     public function setPageNo($pageNo)
     {
         $this->pageNo = $pageNo;
     }
 
+    /**
+     * @return \pingdecopong\PagerBundle\Pager\PagerSelector\PagerSelectorNoView
+     */
     public function getPageNo()
     {
         return $this->pageNo;

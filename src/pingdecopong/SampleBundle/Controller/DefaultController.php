@@ -79,7 +79,7 @@ class DefaultController extends Controller
         $pager
             ->addColumn('id', array(
                 'label' => 'ID',
-                'sort_enable' => false,
+//                'sort_enable' => false,
             ))
             ->addColumn('name', array(
                 'label' => '名称',
@@ -127,6 +127,7 @@ class DefaultController extends Controller
         $formView = $form->createView();
         $pager->setAllFormView($formView);
         $pager->setPagerFormView($formView['form']);
+        $pager->setRouteName($request->get('_route'));
 
         $data = array();
         $a = $this->generateQueryArray($formView, $data);

@@ -5,7 +5,7 @@
         {% if page.select %}
             {{ page.label }}
         {% else %}
-            <a href="#" >{{ page.label }}</a>
+            <a href="{{ path(pager.RouteName, page.query) }}" >{{ page.label }}</a>
         {% endif %}
     {% endfor %}
 </div>

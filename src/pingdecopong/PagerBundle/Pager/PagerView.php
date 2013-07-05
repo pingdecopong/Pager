@@ -12,44 +12,42 @@ namespace pingdecopong\PagerBundle\Pager;
 
 class PagerView {
 
+    /**
+     * @var \pingdecopong\PagerBundle\Pager\PagerSelector\PagerSelectorView
+     */
     private $pagerSelector;
+    /**
+     * @var \pingdecopong\PagerBundle\Pager\PagerColumn\PagerColumnView
+     */
     private $pagerColumn;
+    /**
+     * @var \Symfony\Component\Form\FormView
+     */
     private $formView;
 
     /**
-     * @param mixed $pagerColumn
+     * @var string
      */
-    public function setPagerColumn($pagerColumn)
+    private $routeName;
+
+    /**
+     * @param string $routeName
+     */
+    public function setRouteName($routeName)
     {
-        $this->pagerColumn = $pagerColumn;
+        $this->routeName = $routeName;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getPagerColumn()
+    public function getRouteName()
     {
-        return $this->pagerColumn;
+        return $this->routeName;
     }
 
     /**
-     * @param mixed $pagerSelector
-     */
-    public function setPagerSelector($pagerSelector)
-    {
-        $this->pagerSelector = $pagerSelector;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPagerSelector()
-    {
-        return $this->pagerSelector;
-    }
-
-    /**
-     * @param mixed $formView
+     * @param \Symfony\Component\Form\FormView $formView
      */
     public function setFormView($formView)
     {
@@ -57,11 +55,43 @@ class PagerView {
     }
 
     /**
-     * @return mixed
+     * @return \Symfony\Component\Form\FormView
      */
     public function getFormView()
     {
         return $this->formView;
+    }
+
+    /**
+     * @param \pingdecopong\PagerBundle\Pager\PagerColumn\PagerColumnView $pagerColumn
+     */
+    public function setPagerColumn($pagerColumn)
+    {
+        $this->pagerColumn = $pagerColumn;
+    }
+
+    /**
+     * @return \pingdecopong\PagerBundle\Pager\PagerColumn\PagerColumnView
+     */
+    public function getPagerColumn()
+    {
+        return $this->pagerColumn;
+    }
+
+    /**
+     * @param \pingdecopong\PagerBundle\Pager\PagerSelector\PagerSelectorView $pagerSelector
+     */
+    public function setPagerSelector($pagerSelector)
+    {
+        $this->pagerSelector = $pagerSelector;
+    }
+
+    /**
+     * @return \pingdecopong\PagerBundle\Pager\PagerSelector\PagerSelectorView
+     */
+    public function getPagerSelector()
+    {
+        return $this->pagerSelector;
     }
 
 }
