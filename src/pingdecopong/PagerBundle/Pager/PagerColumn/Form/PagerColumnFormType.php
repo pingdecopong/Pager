@@ -41,7 +41,7 @@ class PagerColumnFormType extends AbstractType {
 
     public function getName()
     {
-        return 'pagercolumn';
+        return 'c';
     }
 
 }

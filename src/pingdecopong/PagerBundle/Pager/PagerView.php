@@ -28,22 +28,22 @@ class PagerView {
     /**
      * @var string
      */
-    private $routeName;
+    private $linkRouteName;
 
     /**
-     * @param string $routeName
+     * @param string $linkRouteName
      */
-    public function setRouteName($routeName)
+    public function setLinkRouteName($linkRouteName)
     {
-        $this->routeName = $routeName;
+        $this->linkRouteName = $linkRouteName;
     }
 
     /**
      * @return string
      */
-    public function getRouteName()
+    public function getLinkRouteName()
     {
-        return $this->routeName;
+        return $this->linkRouteName;
     }
 
     /**

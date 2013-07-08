@@ -1,29 +1,28 @@
 {# default column #}
 
-<thead>
-    <tr>
-        {% for header in pager.PagerColumn.Rows %}
-            <th>
-                {% if header.Enable %}
-                    {% if header.sortSelected %}
-                        {% if header.SortType == 'asc' %}
-                            <a href="{{ path(pager.RouteName, header.query) }}" >
-                                {{ header.label }}↓
-                            </a>
-                        {% elseif header.SortType == 'desc' %}
-                            <a href="{{ path(pager.RouteName, header.query) }}" >
-                                {{ header.label }}↑
-                            </a>
-                        {% endif %}
-                    {% else %}
-                        <a href="{{ path(pager.RouteName, header.query) }}" >
-                            {{ header.label }}
+<tr>
+    {% for header in pager.PagerColumn.Rows %}
+        <th>
+            {% if header.Enable %}
+                {% if header.sortSelected %}
+                    {% if header.SortType == 'asc' %}
+                        <a href="{{ path(pager.LinkRouteName, header.query) }}" >
+                            {{ header.label }}↓
+                        </a>
+                    {% elseif header.SortType == 'desc' %}
+                        <a href="{{ path(pager.LinkRouteName, header.query) }}" >
+                            {{ header.label }}↑
                         </a>
                     {% endif %}
                 {% else %}
-                    {{ header.label }}
+                    <a href="{{ path(pager.LinkRouteName, header.query) }}" >
+                        {{ header.label }}
+                    </a>
                 {% endif %}
-            </th>
-        {% endfor %}
-    </tr>
-</thead>
+            {% else %}
+                {{ header.label }}
+            {% endif %}
+        </th>
+    {% endfor %}
+</tr>
+

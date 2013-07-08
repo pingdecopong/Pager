@@ -21,22 +21,22 @@ class Pager {
     private $allFormView;
     private $pagerFormView;
 
-    private $routeName;
+    private $linkRouteName;
 
     /**
-     * @param mixed $routeName
+     * @param mixed $linkRouteName
      */
-    public function setRouteName($routeName)
+    public function setLinkRouteName($linkRouteName)
     {
-        $this->routeName = $routeName;
+        $this->linkRouteName = $linkRouteName;
     }
 
     /**
      * @return mixed
      */
-    public function getRouteName()
+    public function getLinkRouteName()
     {
-        return $this->routeName;
+        return $this->linkRouteName;
     }
 
     /**
@@ -69,6 +69,23 @@ class Pager {
     public function getPagerFormView()
     {
         return $this->pagerFormView;
+    }
+
+    public function getPageNo()
+    {
+        return $this->pagerSelector->getPageNo();
+    }
+    public function getPageSize()
+    {
+        return $this->pagerSelector->getPageSize();
+    }
+    public function getSortName()
+    {
+        return $this->pagerColumn->getSortName();
+    }
+    public function getSortType()
+    {
+        return $this->pagerColumn->getSortType();
     }
 
     /**
@@ -110,12 +127,19 @@ class Pager {
         return $this;
     }
 
+    public function getFormName()
+    {
+        return 'p';
+    }
+
     public function getFormBuilder()
     {
         $pagerSelectorFormBuilder = $this->pagerSelector->getFormBuilder();
         $pagerColumnFormBuilder = $this->pagerColumn->getFormBuilder();
 
-        $formBuilder = $this->formFactory->createBuilder('form', null, array('csrf_protection' => false))
+//        $this->formFactory->createNamedBuilder()
+//        $formBuilder = $this->formFactory->createBuilder('form', null, array('csrf_protection' => false))
+        $formBuilder = $this->formFactory->createNamedBuilder('p', 'form', null, array('csrf_protection' => false))
             ->add($pagerSelectorFormBuilder)
             ->add($pagerColumnFormBuilder);
 
@@ -156,6 +180,7 @@ class Pager {
 //            $value->setQuery($queryString);
             $value->setQuery($temp);
         }
+        //カラム名クリック時のリンクパラメータ作成
         foreach($pagerView->getPagerColumn()->getRows() as $value)
         {
             /* @var $value \pingdecopong\PagerBundle\Pager\PagerColumn\PagerColumnRowView */
@@ -174,7 +199,7 @@ class Pager {
         }
 
         //route name
-        $pagerView->setRouteName($this->routeName);
+        $pagerView->setLinkRouteName($this->linkRouteName);
 
         return $pagerView;
     }

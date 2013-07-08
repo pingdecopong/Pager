@@ -75,6 +75,14 @@ class DefaultController extends Controller
         $formFactory = $this->get('form.factory');
         $pager = new Pager($formFactory);
 
+        //data
+        $data = array();
+        for($i=0; $i<100; $i++)
+        {
+            $data[$i]['id'] = $i;
+            $data[$i]['name'] = $i;
+        }
+
         //
         $pager
             ->addColumn('id', array(
@@ -85,7 +93,7 @@ class DefaultController extends Controller
                 'label' => '名称',
                 'sort_enable' => true,
             ));
-        $pager->setAllCount(38);
+        $pager->setAllCount(100);
 
 /*
         $form = $this->createFormBuilder(null, array('csrf_protection' => false))
@@ -118,17 +126,25 @@ class DefaultController extends Controller
         $formView = $form->createView();
 */
 
-        $form = $formFactory->createBuilder('form', null, array('csrf_protection' => false))
+        //TODO: パラメータ名短縮（pageNoなども含む）
+        //TODO: ページャースキーマ
+        $form = $formFactory->createNamedBuilder('f', 'form', null, array('csrf_protection' => false))
             ->add($pager->getFormBuilder())
             ->add('search', new SearchFormType())
             ->getForm();
-
         $form->bind($request);
+
+        //data
+        $pageSize = $pager->getPageSize();
+        $pageNo = $pager->getPageNo();
+        $viewData = array_slice($data, $pageSize*($pageNo-1), $pageSize);
+
+
         $formView = $form->createView();
         $pager->setAllFormView($formView);
-        $pager->setPagerFormView($formView['form']);
-        $pager->setRouteName($request->get('_route'));
-
+        $pager->setPagerFormView($formView[$pager->getFormName()]);
+        $pager->setLinkRouteName($request->get('_route'));//list2
+/*
         $data = array();
         $a = $this->generateQueryArray($formView, $data);
         $data2 = array();
@@ -136,7 +152,7 @@ class DefaultController extends Controller
 
 
         $e = $formView->vars['value'];
-
+*/
 //        for($i=0; $i < 10; $i++)
 //        {
 //            $d = $form->createView();
@@ -158,6 +174,7 @@ class DefaultController extends Controller
         return array(
             'form' => $formView,
             'pager' => $pager->createView(),
+            'datas' => $viewData,
         );
     }
 
