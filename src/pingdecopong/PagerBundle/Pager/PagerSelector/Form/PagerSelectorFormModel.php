@@ -8,6 +8,12 @@ class PagerSelectorFormModel {
     private  $pageNo;
     private  $pageSize;
 
+    function __construct()
+    {
+        $this->pageNo = 1;
+        $this->pageSize = 10;
+    }
+
     /**
      * @param mixed $pageNo
      */

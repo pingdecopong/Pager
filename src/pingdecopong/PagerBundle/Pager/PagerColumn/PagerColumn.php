@@ -101,6 +101,7 @@ class PagerColumn {
     public function addColumn($name, $option)
     {
         $this->column[$name] = $option;
+        $this->formModel->addSortNameList($name);
         return $this;
     }
 

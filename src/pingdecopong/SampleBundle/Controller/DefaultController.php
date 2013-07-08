@@ -103,6 +103,11 @@ class DefaultController extends Controller
             ->getForm();
         $form->bind($request);
 
+        if(!$form->isValid())
+        {
+            return $this->redirect($this->generateUrl('list2'));
+        }
+
         //data
         $pageSize = $pager->getPageSize();
         $pageNo = $pager->getPageNo();
