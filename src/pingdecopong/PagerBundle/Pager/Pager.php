@@ -88,10 +88,6 @@ class Pager {
         return $this->pagerColumn->getSortType();
     }
 
-    /**
-     * @var int
-     */
-    private $allCount;
 
     public function __construct(FormFactory $formFactory)
     {
@@ -108,7 +104,6 @@ class Pager {
     public function setAllCount($allCount)
     {
         $this->pagerSelector->setAllCount($allCount);
-//        $this->allCount = $allCount;
     }
 
     /**
@@ -117,13 +112,12 @@ class Pager {
     public function getAllCount()
     {
         return $this->pagerSelector->getAllCount();
-//        return $this->allCount;
     }
 
     public function addColumn($name, $option)
     {
         $this->pagerColumn->addColumn($name, $option);
-//        $this->column[$name] = $option;
+
         return $this;
     }
 
@@ -137,8 +131,6 @@ class Pager {
         $pagerSelectorFormBuilder = $this->pagerSelector->getFormBuilder();
         $pagerColumnFormBuilder = $this->pagerColumn->getFormBuilder();
 
-//        $this->formFactory->createNamedBuilder()
-//        $formBuilder = $this->formFactory->createBuilder('form', null, array('csrf_protection' => false))
         $formBuilder = $this->formFactory->createNamedBuilder('p', 'form', null, array('csrf_protection' => false))
             ->add($pagerSelectorFormBuilder)
             ->add($pagerColumnFormBuilder);
@@ -160,13 +152,7 @@ class Pager {
 
         //form view
         $pagerView->setFormView($this->getPagerFormView());
-/*
-        //set query param
-        $queryAllData = array();
-        $this->generateQueryArray($this->getAllFormView(), $queryAllData);
-        $queryPagerData = array();
-        $this->getPagerFormQueryNames($this->getPagerFormView() ,$queryPagerData);
-*/
+
         //ページ番号クリック時のリンクパラメータ作成
         $queryAllData = $this->getAllFormQueryStrings();
         $queryPagerData = $this->getPagerFormQueryKeyStrings();
@@ -175,11 +161,10 @@ class Pager {
             /* @var $value \pingdecopong\PagerBundle\Pager\PagerSelector\PagerSelectorNoRowView */
             $temp = $queryAllData;
             $temp[$queryPagerData['pageNo']] = $value->getPageNo();
-//            $queryString = http_build_query($temp);
 
-//            $value->setQuery($queryString);
             $value->setQuery($temp);
         }
+
         //カラム名クリック時のリンクパラメータ作成
         foreach($pagerView->getPagerColumn()->getRows() as $value)
         {
@@ -204,12 +189,21 @@ class Pager {
         return $pagerView;
     }
 
+    /**
+     * GETパラメータ用配列取得（全フォーム）
+     * @return array
+     */
     private function getAllFormQueryStrings()
     {
         $queryAllData = array();
         $this->generateQueryArray($this->allFormView, $queryAllData);
         return $queryAllData;
     }
+
+    /**
+     * GETパラメータのKEY用配列取得（ページャー用フォームのみ）
+     * @return array
+     */
     private function getPagerFormQueryKeyStrings()
     {
         $queryPagerData = array();
@@ -221,7 +215,6 @@ class Pager {
     {
         if(count($formView) == 0)
         {
-//            $queryArray[urlencode($formView->vars['full_name'])] = $formView->vars['value'];
             $queryArray[$formView->vars['full_name']] = $formView->vars['value'];
         }else
         {
@@ -236,7 +229,6 @@ class Pager {
     {
         if(count($pagerFormView) == 0)
         {
-//            $queryArray[$pagerFormView->vars['name']] = urlencode($pagerFormView->vars['full_name']);
             $queryArray[$pagerFormView->vars['name']] = $pagerFormView->vars['full_name'];
         }else
         {
