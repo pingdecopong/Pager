@@ -105,6 +105,15 @@ class PagerColumn {
         return $this;
     }
 
+    public function getColumn($name)
+    {
+        if(!isset($this->column[$name]))
+        {
+            return false;
+        }
+        return $this->column[$name];
+    }
+
     public function createView()
     {
         $basicColumnView = new PagerColumnView();

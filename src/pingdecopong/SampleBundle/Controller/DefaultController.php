@@ -139,19 +139,23 @@ class DefaultController extends Controller
         $pager
             ->addColumn('id', array(
                 'label' => 'ID',
-                'sort_enable' => false,
+                'sort_enable' => true,
+                'db_column_name' => 'id',
             ))
             ->addColumn('name', array(
                 'label' => '名称',
                 'sort_enable' => true,
+                'db_column_name' => 'name',
             ))
             ->addColumn('namekana', array(
                 'label' => '名称（カナ）',
                 'sort_enable' => true,
+                'db_column_name' => 'namekana',
             ))
             ->addColumn('created', array(
                 'label' => '作成日時',
                 'sort_enable' => true,
+                'db_column_name' => 'created',
             ));
 
         $form = $formFactory->createNamedBuilder('f', 'form', null, array('csrf_protection' => false))
@@ -180,6 +184,16 @@ class DefaultController extends Controller
         $queryCount = $queryBuilderCount->getQuery();
         $allCount = $queryCount->getSingleScalarResult();
         $pager->setAllCount($allCount);
+
+        //ソート
+        $pageSortName = $pager->getSortName();
+        $pageSortType = $pager->getSortType();
+        if($pageSortName != null && $pageSortType != null)
+        {
+            $sortColumn = $pager->getColumn($pageSortName);
+            $queryBuilder = $queryBuilder->orderBy('u.'.$sortColumn['db_column_name'], $pageSortType);
+        }
+
 
         //ページング
         $queryBuilder = $queryBuilder->setFirstResult($pageSize*($pageNo-1))

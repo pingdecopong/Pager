@@ -121,6 +121,11 @@ class Pager {
         return $this;
     }
 
+    public function getColumn($name)
+    {
+        return $this->pagerColumn->getColumn($name);
+    }
+
     public function getFormName()
     {
         return 'p';
