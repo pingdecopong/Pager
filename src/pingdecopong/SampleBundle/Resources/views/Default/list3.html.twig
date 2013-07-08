@@ -19,10 +19,12 @@
         {{ pdp_pager_column_render(pager) }}
         </thead>
         <tbody>
-        {% for data in datas %}
+        {% for entity in entities %}
             <tr>
-                <td>{{ data.id }}</td>
-                <td>{{ data.name }}</td>
+                <td>{{ entity.id }}</td>
+                <td>{{ entity.name }}</td>
+                <td>{{ entity.namekana }}</td>
+                <td>{{ entity.created|date('Y-m-d') }}</td>
             </tr>
         {% endfor %}
         </tbody>

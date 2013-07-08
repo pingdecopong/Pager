@@ -126,6 +126,7 @@ class DefaultController extends Controller
     }
 
     /**
+     * @todo ソート機能、検索機能
      * @Route("/list3", name="list3")
      * @Template()
      */
@@ -134,28 +135,25 @@ class DefaultController extends Controller
         $formFactory = $this->get('form.factory');
         $pager = new Pager($formFactory);
 
-        //data
-        $data = array();
-        for($i=0; $i<100; $i++)
-        {
-            $data[$i]['id'] = $i;
-            $data[$i]['name'] = $i;
-        }
-
         //
         $pager
             ->addColumn('id', array(
                 'label' => 'ID',
-//                'sort_enable' => false,
+                'sort_enable' => false,
             ))
             ->addColumn('name', array(
                 'label' => '名称',
                 'sort_enable' => true,
+            ))
+            ->addColumn('namekana', array(
+                'label' => '名称（カナ）',
+                'sort_enable' => true,
+            ))
+            ->addColumn('created', array(
+                'label' => '作成日時',
+                'sort_enable' => true,
             ));
-        $pager->setAllCount(100);
 
-        //TODO: パラメータ名短縮（pageNoなども含む）
-        //TODO: ページャースキーマ
         $form = $formFactory->createNamedBuilder('f', 'form', null, array('csrf_protection' => false))
             ->add($pager->getFormBuilder())
             ->add('search', new SearchFormType())
@@ -170,17 +168,35 @@ class DefaultController extends Controller
         //data
         $pageSize = $pager->getPageSize();
         $pageNo = $pager->getPageNo();
-        $viewData = array_slice($data, $pageSize*($pageNo-1), $pageSize);
+
+        //db
+        $queryBuilder = $this->getDoctrine()
+            ->getRepository('pingdecopongSampleBundle:SystemUser')
+            ->createQueryBuilder('u');
+
+        //全件数取得
+        $queryBuilderCount = clone $queryBuilder;
+        $queryBuilderCount = $queryBuilderCount->select('count(u.id)');
+        $queryCount = $queryBuilderCount->getQuery();
+        $allCount = $queryCount->getSingleScalarResult();
+        $pager->setAllCount($allCount);
+
+        //ページング
+        $queryBuilder = $queryBuilder->setFirstResult($pageSize*($pageNo-1))
+            ->setMaxResults($pageSize);
+
+        //クエリー実行
+        $entities = $queryBuilder->getQuery()->getResult();
 
         $formView = $form->createView();
         $pager->setAllFormView($formView);
         $pager->setPagerFormView($formView[$pager->getFormName()]);
-        $pager->setLinkRouteName($request->get('_route'));//list2
+        $pager->setLinkRouteName($request->get('_route'));//list3
 
         return array(
             'form' => $formView,
             'pager' => $pager->createView(),
-            'datas' => $viewData,
+            'entities' => $entities,
         );
     }
 
