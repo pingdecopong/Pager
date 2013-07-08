@@ -1,0 +1,41 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}list3{% endblock %}
+
+
+
+{% block body %}
+<h1>list3</h1>
+<form action="{{ path('list3') }}" method="get" {{ form_enctype(form) }} novalidate name="list3" id="list3">
+
+    {{ pdp_pager_hidden_render(pager) }}
+
+    <div class="search_box">
+        {{ form_widget(form.search) }}
+    </div>
+
+    <table>
+        <thead>
+        {{ pdp_pager_column_render(pager) }}
+        </thead>
+        <tbody>
+        {% for data in datas %}
+            <tr>
+                <td>{{ data.id }}</td>
+                <td>{{ data.name }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {{ pdp_pager_selector_render(pager) }}
+    {{ pdp_pager_pagesize_render(pager) }}
+
+</form>
+{% endblock %}
+
+
+
+{% block javascripts %}
+
+{% endblock %}

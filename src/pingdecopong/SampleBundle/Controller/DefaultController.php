@@ -125,4 +125,63 @@ class DefaultController extends Controller
         );
     }
 
+    /**
+     * @Route("/list3", name="list3")
+     * @Template()
+     */
+    public function list3Action(Request $request)
+    {
+        $formFactory = $this->get('form.factory');
+        $pager = new Pager($formFactory);
+
+        //data
+        $data = array();
+        for($i=0; $i<100; $i++)
+        {
+            $data[$i]['id'] = $i;
+            $data[$i]['name'] = $i;
+        }
+
+        //
+        $pager
+            ->addColumn('id', array(
+                'label' => 'ID',
+//                'sort_enable' => false,
+            ))
+            ->addColumn('name', array(
+                'label' => '名称',
+                'sort_enable' => true,
+            ));
+        $pager->setAllCount(100);
+
+        //TODO: パラメータ名短縮（pageNoなども含む）
+        //TODO: ページャースキーマ
+        $form = $formFactory->createNamedBuilder('f', 'form', null, array('csrf_protection' => false))
+            ->add($pager->getFormBuilder())
+            ->add('search', new SearchFormType())
+            ->getForm();
+        $form->bind($request);
+
+        if(!$form->isValid())
+        {
+            return $this->redirect($this->generateUrl('list2'));
+        }
+
+        //data
+        $pageSize = $pager->getPageSize();
+        $pageNo = $pager->getPageNo();
+        $viewData = array_slice($data, $pageSize*($pageNo-1), $pageSize);
+
+        $formView = $form->createView();
+        $pager->setAllFormView($formView);
+        $pager->setPagerFormView($formView[$pager->getFormName()]);
+        $pager->setLinkRouteName($request->get('_route'));//list2
+
+        return array(
+            'form' => $formView,
+            'pager' => $pager->createView(),
+            'datas' => $viewData,
+        );
+    }
+
 }
