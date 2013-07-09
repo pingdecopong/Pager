@@ -34,14 +34,16 @@ class PagerExtension  extends \Twig_Extension
     public function pagesizeRender($pager)
     {
         $data = array();
-        $data['pagerformview'] = $pager->getFormView();
+        $data['pager'] = $pager;
+//        $data['pagerformview'] = $pager->getFormView();
         return $this->environment->render('pingdecopongPagerBundle:Pager:defaultPagesize.html.twig', $data);
     }
 
     public function hiddenRender($pager)
     {
         $data = array();
-        $data['pagerformview'] = $pager->getFormView();
+        $data['pager'] = $pager;
+//        $data['pagerformview'] = $pager->getFormView();
         return $this->environment->render('pingdecopongPagerBundle:Pager:defaultHidden.html.twig', $data);
     }
 

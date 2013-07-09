@@ -156,7 +156,11 @@ class Pager {
         $pagerView->setPagerSelector($pagerSelectorView);
 
         //form view
-        $pagerView->setFormView($this->getPagerFormView());
+//        $pagerView->setFormView($this->getPagerFormView());
+        //all form view
+        $pagerView->setAllFormView($this->allFormView);
+        //pager form view
+        $pagerView->setPagerFormView($this->pagerFormView);
 
         //ページ番号クリック時のリンクパラメータ作成
         $queryAllData = $this->getAllFormQueryStrings();
@@ -186,6 +190,18 @@ class Pager {
             }
 
             $value->setQuery($temp);
+        }
+
+        //ページサイズ変更時のリンクパラメータ作成
+        $a = $this->pagerSelector->getPageSizeList();
+        foreach($this->pagerSelector->getPageSizeList() as $key => $value)
+        {
+            /* @var $value \pingdecopong\PagerBundle\Pager\PagerColumn\PagerColumnRowView */
+            $temp = $queryAllData;
+            $temp[$queryPagerData['pageNo']] = 1;
+            $temp[$queryPagerData['pageSize']] = $value;
+
+            $pagerView->addPageSizeParamList($key, $temp);
         }
 
         //route name

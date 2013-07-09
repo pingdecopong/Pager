@@ -6,16 +6,16 @@
             {% if header.Enable %}
                 {% if header.sortSelected %}
                     {% if header.SortType == 'asc' %}
-                        <a href="{{ path(pager.LinkRouteName, header.query) }}" >
+                        <a href="{{ path(pager.LinkRouteName, header.query)|raw }}" >
                             {{ header.label }}↓
                         </a>
                     {% elseif header.SortType == 'desc' %}
-                        <a href="{{ path(pager.LinkRouteName, header.query) }}" >
+                        <a href="{{ path(pager.LinkRouteName, header.query)|raw }}" >
                             {{ header.label }}↑
                         </a>
                     {% endif %}
                 {% else %}
-                    <a href="{{ path(pager.LinkRouteName, header.query) }}" >
+                    <a href="{{ path(pager.LinkRouteName, header.query)|raw }}" >
                         {{ header.label }}
                     </a>
                 {% endif %}

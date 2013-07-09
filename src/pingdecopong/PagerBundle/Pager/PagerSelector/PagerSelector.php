@@ -102,6 +102,15 @@ class PagerSelector {
         return $this->formModel->getPageSize();
     }
 
+    public function setPageSizeList($pageSizeList)
+    {
+        $this->formType->setSizeList($pageSizeList);
+    }
+    public function getPageSizeList()
+    {
+        return $this->formType->getSizeList();
+    }
+
     private function buildForm()
     {
         //基礎フォーム生成

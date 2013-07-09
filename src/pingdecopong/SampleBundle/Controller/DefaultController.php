@@ -126,7 +126,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * @todo ソート機能、検索機能
+     * DB,検索フォーム　検索ポストバックタイプ
      * @Route("/list3", name="list3")
      * @Template()
      */
@@ -166,7 +166,7 @@ class DefaultController extends Controller
 
         if(!$form->isValid())
         {
-            return $this->redirect($this->generateUrl('list2'));
+            return $this->redirect($this->generateUrl('list3'));
         }
 
         //data
@@ -177,6 +177,15 @@ class DefaultController extends Controller
         $queryBuilder = $this->getDoctrine()
             ->getRepository('pingdecopongSampleBundle:SystemUser')
             ->createQueryBuilder('u');
+
+        //検索
+        $data = $form->getData();
+        $searchName = $data['search']->getName();
+        if(isset($searchName))
+        {
+            $queryBuilder = $queryBuilder->andWhere('u.name LIKE :name')
+                ->setParameter('name', '%'.$searchName.'%');
+        }
 
         //全件数取得
         $queryBuilderCount = clone $queryBuilder;
@@ -194,7 +203,6 @@ class DefaultController extends Controller
             $queryBuilder = $queryBuilder->orderBy('u.'.$sortColumn['db_column_name'], $pageSortType);
         }
 
-
         //ページング
         $queryBuilder = $queryBuilder->setFirstResult($pageSize*($pageNo-1))
             ->setMaxResults($pageSize);
@@ -202,6 +210,7 @@ class DefaultController extends Controller
         //クエリー実行
         $entities = $queryBuilder->getQuery()->getResult();
 
+        //pager
         $formView = $form->createView();
         $pager->setAllFormView($formView);
         $pager->setPagerFormView($formView[$pager->getFormName()]);

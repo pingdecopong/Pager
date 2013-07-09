@@ -23,12 +23,81 @@ class PagerView {
     /**
      * @var \Symfony\Component\Form\FormView
      */
-    private $formView;
+//    private $formView;
+
+    /**
+     * @var \Symfony\Component\Form\FormView
+     */
+    private $allFormView;
+
+    /**
+     * @var \Symfony\Component\Form\FormView
+     */
+    private $pagerFormView;
 
     /**
      * @var string
      */
     private $linkRouteName;
+
+    /**
+     * @var array
+     */
+    private $pageSizeParamList;
+
+    function __construct()
+    {
+        $this->pageSizeParamList = array();
+    }
+
+    /**
+     * @param $key
+     * @param $pageSizeParamList
+     */
+    public function addPageSizeParamList($key, $pageSizeParamList)
+    {
+        $this->pageSizeParamList[$key] = $pageSizeParamList;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPageSizeParamList()
+    {
+        return $this->pageSizeParamList;
+    }
+
+    /**
+     * @param \Symfony\Component\Form\FormView $allFormView
+     */
+    public function setAllFormView($allFormView)
+    {
+        $this->allFormView = $allFormView;
+    }
+
+    /**
+     * @return \Symfony\Component\Form\FormView
+     */
+    public function getAllFormView()
+    {
+        return $this->allFormView;
+    }
+
+    /**
+     * @param \Symfony\Component\Form\FormView $pagerFormView
+     */
+    public function setPagerFormView($pagerFormView)
+    {
+        $this->pagerFormView = $pagerFormView;
+    }
+
+    /**
+     * @return \Symfony\Component\Form\FormView
+     */
+    public function getPagerFormView()
+    {
+        return $this->pagerFormView;
+    }
 
     /**
      * @param string $linkRouteName
@@ -46,21 +115,7 @@ class PagerView {
         return $this->linkRouteName;
     }
 
-    /**
-     * @param \Symfony\Component\Form\FormView $formView
-     */
-    public function setFormView($formView)
-    {
-        $this->formView = $formView;
-    }
 
-    /**
-     * @return \Symfony\Component\Form\FormView
-     */
-    public function getFormView()
-    {
-        return $this->formView;
-    }
 
     /**
      * @param \pingdecopong\PagerBundle\Pager\PagerColumn\PagerColumnView $pagerColumn

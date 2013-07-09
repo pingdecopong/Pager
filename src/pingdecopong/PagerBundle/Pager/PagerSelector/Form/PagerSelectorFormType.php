@@ -66,9 +66,6 @@ class PagerSelectorFormType extends AbstractType {
             ->add('pageSize', 'choice', array(
                 'choices' => $this->sizeList,
                 'required' => true,
-                'attr' => array(
-                    'onChange' => 'javascript:changePageSize();',
-                ),
             ))
             ->addEventListener(FormEvents::PRE_BIND, function(FormEvent $event) use($sizeDefault) {
 
