@@ -1,12 +1,12 @@
 {% extends "::base.html.twig" %}
 
-{% block title %}list3{% endblock %}
+{% block title %}list4{% endblock %}
 
 
 
 {% block body %}
-<h1>list3</h1>
-<form action="{{ path('list3') }}" method="get" {{ form_enctype(form) }} novalidate name="list3" id="list3">
+<h1>list4</h1>
+<form action="{{ path('list4') }}" method="post" {{ form_enctype(form) }} novalidate name="list4" id="list4">
 
     {{ pdp_pager_hidden_render(pager) }}
 

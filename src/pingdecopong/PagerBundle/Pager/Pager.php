@@ -14,6 +14,10 @@ class Pager {
      * @var \Symfony\Component\Form\FormFactory
      */
     private $formFactory;
+    /**
+     * @var \Symfony\Component\Validator\Validator
+     */
+    private $validator;
 
     private $pagerSelector;
     private $pagerColumn;
@@ -89,9 +93,10 @@ class Pager {
     }
 
 
-    public function __construct(FormFactory $formFactory)
+    public function __construct($formFactory, $validator)
     {
         $this->formFactory = $formFactory;
+        $this->validator = $validator;
 
         $this->pagerSelector = new PagerSelector($formFactory);
         $this->pagerColumn = new PagerColumn($formFactory);
@@ -129,6 +134,28 @@ class Pager {
     public function getFormName()
     {
         return 'p';
+    }
+
+    public function getMaxPageNum()
+    {
+        return $this->pagerSelector->getMaxPageNum();
+    }
+
+    public function isValid()
+    {
+        //pager column
+        $columnErrors = $this->validator->validate($this->pagerColumn->getFormModel());
+        if(count($columnErrors)>0){
+            return false;
+        }
+
+        //pager selector
+        $selectorErrors = $this->validator->validate($this->pagerSelector->getFormModel());
+        if(count($selectorErrors)>0){
+            return false;
+        }
+
+        return true;
     }
 
     public function getFormBuilder()
@@ -212,12 +239,13 @@ class Pager {
 
     /**
      * GETパラメータ用配列取得（全フォーム）
+     * @param bool $validCheck
      * @return array
      */
-    private function getAllFormQueryStrings()
+    public function getAllFormQueryStrings($validCheck = true)
     {
         $queryAllData = array();
-        $this->generateQueryArray($this->allFormView, $queryAllData);
+        $this->generateQueryArray($this->allFormView, $queryAllData, $validCheck);
         return $queryAllData;
     }
 
@@ -225,18 +253,22 @@ class Pager {
      * GETパラメータのKEY用配列取得（ページャー用フォームのみ）
      * @return array
      */
-    private function getPagerFormQueryKeyStrings()
+    public function getPagerFormQueryKeyStrings()
     {
         $queryPagerData = array();
         $this->getPagerFormQueryNames($this->pagerFormView ,$queryPagerData);
         return $queryPagerData;
     }
 
-    private function generateQueryArray(FormView $formView, &$queryArray)
+    private function generateQueryArray(FormView $formView, &$queryArray, $validCheck = true)
     {
         if(count($formView) == 0)
         {
-            $queryArray[$formView->vars['full_name']] = $formView->vars['value'];
+            if($validCheck && $formView->vars['valid'] == false){
+                $queryArray[$formView->vars['full_name']] = '';
+            }else{
+                $queryArray[$formView->vars['full_name']] = $formView->vars['value'];
+            }
         }else
         {
             foreach($formView as $value)

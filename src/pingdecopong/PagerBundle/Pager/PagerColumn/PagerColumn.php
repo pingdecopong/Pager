@@ -54,6 +54,14 @@ class PagerColumn {
     }
 
     /**
+     * @return \pingdecopong\PagerBundle\Pager\PagerColumn\Form\PagerColumnFormModel
+     */
+    public function getFormModel()
+    {
+        return $this->formModel;
+    }
+
+    /**
      * @param mixed $sortName
      */
     public function setSortName($sortName)

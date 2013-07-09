@@ -67,6 +67,14 @@ class PagerSelector {
     }
 
     /**
+     * @return \pingdecopong\PagerBundle\Pager\PagerSelector\Form\PagerSelectorFormModel
+     */
+    public function getFormModel()
+    {
+        return $this->formModel;
+    }
+
+    /**
      * @param mixed $pageNo
      */
     public function setPageNo($pageNo)
@@ -109,6 +117,15 @@ class PagerSelector {
     public function getPageSizeList()
     {
         return $this->formType->getSizeList();
+    }
+
+    public function getMaxPageNum()
+    {
+        $totalNum = (int)($this->allCount/$this->formModel->getPageSize());
+        if($this->allCount % $this->formModel->getPageSize() != 0){
+            $totalNum++;
+        }
+        return $totalNum;
     }
 
     private function buildForm()

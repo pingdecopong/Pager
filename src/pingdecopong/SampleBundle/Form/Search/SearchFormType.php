@@ -14,6 +14,9 @@ class SearchFormType extends AbstractType {
             ->add('name', 'text', array(
                 'label' => '名前',
             ))
+            ->add('kana', 'text', array(
+                'label' => '名前（カナ）',
+            ))
         ;
     }
 
