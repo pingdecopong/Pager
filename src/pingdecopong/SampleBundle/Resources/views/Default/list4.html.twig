@@ -13,6 +13,7 @@
     <div class="search_box">
         {{ form_widget(form.search) }}
         <input type="submit" value="検索">
+        <button type="button" id="search_reset">検索条件解除</button>
     </div>
 
     <table>
@@ -42,7 +43,9 @@
 {% block javascripts %}
     <script type="text/javascript">
         //<![CDATA[
-
+        $('#search_reset').click(function(){
+            location.href = "{{ path('list4') }}";
+        });
         //]]>
     </script>
 {% endblock %}

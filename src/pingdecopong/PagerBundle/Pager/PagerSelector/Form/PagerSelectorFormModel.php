@@ -3,9 +3,20 @@
 
 namespace pingdecopong\PagerBundle\Pager\PagerSelector\Form;
 
+use Symfony\Component\Validator\Constraints as Assert;
 
 class PagerSelectorFormModel {
+
+    /**
+     * @Assert\Type(type="numeric")
+     * @var int
+     */
     private  $pageNo;
+
+    /**
+     * @Assert\Type(type="numeric")
+     * @var int
+     */
     private  $pageSize;
 
     function __construct()
@@ -15,7 +26,7 @@ class PagerSelectorFormModel {
     }
 
     /**
-     * @param mixed $pageNo
+     * @param int $pageNo
      */
     public function setPageNo($pageNo)
     {
@@ -23,7 +34,7 @@ class PagerSelectorFormModel {
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getPageNo()
     {
@@ -31,7 +42,7 @@ class PagerSelectorFormModel {
     }
 
     /**
-     * @param mixed $pageSize
+     * @param int $pageSize
      */
     public function setPageSize($pageSize)
     {
@@ -39,7 +50,7 @@ class PagerSelectorFormModel {
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getPageSize()
     {
