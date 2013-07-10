@@ -125,6 +125,10 @@ class PagerSelector {
         if($this->allCount % $this->formModel->getPageSize() != 0){
             $totalNum++;
         }
+
+        if($totalNum == 0){
+            $totalNum = 1;
+        }
         return $totalNum;
     }
 
