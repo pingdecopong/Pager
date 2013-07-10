@@ -1,0 +1,51 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}list5{% endblock %}
+
+
+
+{% block body %}
+<h1>list5</h1>
+<form action="{{ path('list5') }}" method="post" {{ form_enctype(form) }} novalidate name="list5" id="list5">
+
+    {{ pdp_pager_hidden_render(pager) }}
+
+    <div class="search_box">
+        {{ form_widget(form.search) }}
+        <input type="submit" value="検索">
+        <button type="button" id="search_reset">検索条件解除</button>
+    </div>
+
+    <table>
+        <thead>
+        {{ pdp_pager_column_render(pager) }}
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td>{{ entity.id }}</td>
+                <td>{{ entity.name }}</td>
+                <td>{{ entity.namekana }}</td>
+                <td>{{ entity.created|date('Y-m-d') }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {{ pdp_pager_selector_render(pager) }}
+    {{ pdp_pager_pagesize_render(pager) }}
+
+</form>
+{% endblock %}
+
+
+
+{% block javascripts %}
+    <script type="text/javascript">
+        //<![CDATA[
+        $('#search_reset').click(function(){
+            location.href = "{{ path('list5') }}";
+        });
+        //]]>
+    </script>
+{% endblock %}

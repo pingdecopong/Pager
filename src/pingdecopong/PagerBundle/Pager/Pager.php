@@ -27,6 +27,8 @@ class Pager {
 
     private $linkRouteName;
 
+    private $formName;
+
     /**
      * @param mixed $linkRouteName
      */
@@ -93,10 +95,11 @@ class Pager {
     }
 
 
-    public function __construct($formFactory, $validator)
+    public function __construct($formFactory, $validator, $formName = 'p')
     {
         $this->formFactory = $formFactory;
         $this->validator = $validator;
+        $this->formName = $formName;
 
         $this->pagerSelector = new PagerSelector($formFactory);
         $this->pagerColumn = new PagerColumn($formFactory);
@@ -133,7 +136,7 @@ class Pager {
 
     public function getFormName()
     {
-        return 'p';
+        return $this->formName;
     }
 
     public function getMaxPageNum()
@@ -163,7 +166,7 @@ class Pager {
         $pagerSelectorFormBuilder = $this->pagerSelector->getFormBuilder();
         $pagerColumnFormBuilder = $this->pagerColumn->getFormBuilder();
 
-        $formBuilder = $this->formFactory->createNamedBuilder('p', 'form', null, array('csrf_protection' => false))
+        $formBuilder = $this->formFactory->createNamedBuilder($this->formName, 'form', null, array('csrf_protection' => false))
             ->add($pagerSelectorFormBuilder)
             ->add($pagerColumnFormBuilder);
 

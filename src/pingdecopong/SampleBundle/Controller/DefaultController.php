@@ -228,6 +228,7 @@ class DefaultController extends Controller
      * DB,検索フォーム　検索ポストバック
      * @Route("/list4", name="list4")
      * @Template()
+     * @Method({"GET", "POST"})
      */
     public function list4Action(Request $request)
     {
@@ -327,6 +328,155 @@ class DefaultController extends Controller
         $pageNo = $pager->getPageNo();
         if($pager->getMaxPageNum() < $pageNo){
             return $this->redirect($this->generateUrl('list4'));
+        }
+        $queryBuilder = $queryBuilder->setFirstResult($pageSize*($pageNo-1))
+            ->setMaxResults($pageSize);
+
+        //クエリー実行
+        $entities = $queryBuilder->getQuery()->getResult();
+
+        return array(
+            'form' => $formView,
+            'pager' => $pager->createView(),
+            'entities' => $entities,
+        );
+    }
+
+    /**
+     * DB,複数検索フォーム　検索ポストバック
+     * @Route("/list5", name="list5")
+     * @Template()
+     * @Method({"GET", "POST"})
+     */
+    public function list5Action(Request $request)
+    {
+        $formFactory = $this->get('form.factory');
+        $validator = $this->get('validator');
+        $pager = new Pager($formFactory, $validator);
+        $pager2 = new Pager($formFactory, $validator, 'p2');
+
+        //pager1
+        $pager
+            ->addColumn('id', array(
+                'label' => 'ID',
+                'sort_enable' => true,
+                'db_column_name' => 'id',
+            ))
+            ->addColumn('name', array(
+                'label' => '名称',
+                'sort_enable' => true,
+                'db_column_name' => 'name',
+            ))
+            ->addColumn('namekana', array(
+                'label' => '名称（カナ）',
+                'sort_enable' => true,
+                'db_column_name' => 'namekana',
+            ))
+            ->addColumn('created', array(
+                'label' => '作成日時',
+                'sort_enable' => true,
+                'db_column_name' => 'created',
+            ));
+
+        //pager2
+        $pager2
+            ->addColumn('id', array(
+                'label' => 'ID2',
+                'sort_enable' => true,
+                'db_column_name' => 'id',
+            ))
+            ->addColumn('name', array(
+                'label' => '名称2',
+                'sort_enable' => true,
+                'db_column_name' => 'name',
+            ))
+            ->addColumn('namekana', array(
+                'label' => '名称（カナ）2',
+                'sort_enable' => true,
+                'db_column_name' => 'namekana',
+            ))
+            ->addColumn('created', array(
+                'label' => '作成日時2',
+                'sort_enable' => true,
+                'db_column_name' => 'created',
+            ));
+
+        $form = $formFactory->createNamedBuilder('f', 'form', null, array('csrf_protection' => false))
+            ->add($pager->getFormBuilder())
+            ->add('search', new SearchFormType())
+            ->add($pager2->getFormBuilder())
+            ->add('search2', new SearchFormType())
+            ->getForm();
+        $form->bind($request);
+
+        //pager
+        $formView = $form->createView();
+        //pager1
+        $pager->setAllFormView($formView);
+        $pager->setPagerFormView($formView[$pager->getFormName()]);
+        $pager->setLinkRouteName($request->get('_route'));//list4
+        //pager2
+        $pager2->setAllFormView($formView);
+        $pager2->setPagerFormView($formView[$pager2->getFormName()]);
+        $pager2->setLinkRouteName($request->get('_route'));//list4
+
+        if($request->isMethod('POST') && $form->isValid())
+        {
+            $queryAllData = $pager->getAllFormQueryStrings();
+            $queryPagerData = $pager->getPagerFormQueryKeyStrings();
+            $queryAllData[$queryPagerData['pageNo']] = 1;
+
+            return $this->redirect($this->generateUrl('list5', $queryAllData));
+        }
+
+        if(($request->isMethod('GET') && !$form->isValid()) || !$pager->isValid())
+        {
+            return $this->redirect($this->generateUrl('list5'));
+        }
+
+        //db
+        $queryBuilder = $this->getDoctrine()
+            ->getRepository('pingdecopongSampleBundle:SystemUser')
+            ->createQueryBuilder('u');
+
+        //検索
+        $data = $form->getData();
+        //名前
+        $searchName = $data['search']->getName();
+        if(isset($searchName) && $form['search']['name']->isValid())
+        {
+            $queryBuilder = $queryBuilder->andWhere('u.name LIKE :name')
+                ->setParameter('name', '%'.$searchName.'%');
+        }
+        //カナ
+        $searchNameKana = $data['search']->getKana();
+        if(isset($searchNameKana) && $form['search']['kana']->isValid())
+        {
+            $queryBuilder = $queryBuilder->andWhere('u.namekana LIKE :namekana')
+                ->setParameter('namekana', '%'.$searchNameKana.'%');
+        }
+
+        //全件数取得
+        $queryBuilderCount = clone $queryBuilder;
+        $queryBuilderCount = $queryBuilderCount->select('count(u.id)');
+        $queryCount = $queryBuilderCount->getQuery();
+        $allCount = $queryCount->getSingleScalarResult();
+        $pager->setAllCount($allCount);
+
+        //ソート
+        $pageSortName = $pager->getSortName();
+        $pageSortType = $pager->getSortType();
+        if($pageSortName != null && $pageSortType != null)
+        {
+            $sortColumn = $pager->getColumn($pageSortName);
+            $queryBuilder = $queryBuilder->orderBy('u.'.$sortColumn['db_column_name'], $pageSortType);
+        }
+
+        //ページング
+        $pageSize = $pager->getPageSize();
+        $pageNo = $pager->getPageNo();
+        if($pager->getMaxPageNum() < $pageNo){
+            return $this->redirect($this->generateUrl('list5'));
         }
         $queryBuilder = $queryBuilder->setFirstResult($pageSize*($pageNo-1))
             ->setMaxResults($pageSize);
