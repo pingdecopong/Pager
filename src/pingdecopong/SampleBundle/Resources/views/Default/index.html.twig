@@ -1,1 +1,17 @@
-Hello {{ name }}!
+{% extends "::base.html.twig" %}
+
+
+{% block title %}サンプルリスト{% endblock %}
+
+{% block body %}
+    <h1>サンプルリスト</h1>
+    <div>
+        <a href="{{ path('list2')|raw }}" >シングルページャータイプ</a>
+    </div>
+    <div>
+        <a href="{{ path('list4')|raw }}" >DB、検索フォーム、シングルページャータイプ</a>
+    </div>
+    <div>
+        <a href="{{ path('list5')|raw }}" >DB、検索フォーム、複数ページャータイプ</a>
+    </div>
+{% endblock %}

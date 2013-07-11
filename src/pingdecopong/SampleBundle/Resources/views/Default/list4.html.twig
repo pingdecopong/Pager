@@ -1,11 +1,11 @@
 {% extends "::base.html.twig" %}
 
-{% block title %}list4{% endblock %}
+{% block title %}DB、検索フォーム、シングルページャータイプ{% endblock %}
 
 
 
 {% block body %}
-<h1>list4</h1>
+<h1>DB、検索フォーム、シングルページャータイプ</h1>
 <form action="{{ path('list4') }}" method="post" {{ form_enctype(form) }} novalidate name="list4" id="list4">
 
     {{ pdp_pager_hidden_render(pager) }}

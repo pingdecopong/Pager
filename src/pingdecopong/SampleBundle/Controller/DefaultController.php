@@ -20,51 +20,12 @@ use Symfony\Component\HttpFoundation\Request;
 class DefaultController extends Controller
 {
     /**
-     * @Route("/hello/{name}")
+     * @Route("/")
      * @Template()
      */
-    public function indexAction($name)
+    public function indexAction()
     {
-        return array('name' => $name);
-    }
-
-    /**
-     * @Route("/list1", name="list1")
-     * @Template()
-     */
-    public function list1Action(Request $request)
-    {
-        $formFactory = $this->get('form.factory');
-        $pagerSelector = new PagerSelector($formFactory);
-        $pagerColumn = new PagerColumn($formFactory);
-
-        $pagerColumn
-            ->addColumn('id', array(
-                'label' => 'ID',
-                'sort_enable' => false,
-            ))
-            ->addColumn('name', array(
-                'label' => '名称',
-                'sort_enable' => true,
-            ));
-
-        $pagerSelector->setAllCount(38);
-
-        $pagerSelectorFormBuilder = $pagerSelector->getFormBuilder();
-        $pagerColumnFormBuilder = $pagerColumn->getFormBuilder();
-
-        $form = $formFactory->createBuilder('form', null, array('csrf_protection' => false))
-            ->add($pagerSelectorFormBuilder)
-            ->add($pagerColumnFormBuilder)
-            ->getForm();
-
-        $form->bind($request);
-
-        return array(
-            'form' => $form->createView(),
-            'pager' => $pagerSelector->createView(),
-            'column' => $pagerColumn->createView(),
-        );
+        return array();
     }
 
     /**
@@ -74,67 +35,17 @@ class DefaultController extends Controller
     public function list2Action(Request $request)
     {
         $formFactory = $this->get('form.factory');
-        $pager = new Pager($formFactory);
+        $validator = $this->get('validator');
+        $pager = new Pager($formFactory, $validator);
 
         //data
-        $data = array();
+        $entities = array();
         for($i=0; $i<100; $i++)
         {
-            $data[$i]['id'] = $i;
-            $data[$i]['name'] = $i;
+            $entities[$i]['id'] = $i;
+            $entities[$i]['name'] = $i;
         }
-
-        //
-        $pager
-            ->addColumn('id', array(
-                'label' => 'ID',
-//                'sort_enable' => false,
-            ))
-            ->addColumn('name', array(
-                'label' => '名称',
-                'sort_enable' => true,
-            ));
         $pager->setAllCount(100);
-
-        //TODO: パラメータ名短縮（pageNoなども含む）
-        //TODO: ページャースキーマ
-        $form = $formFactory->createNamedBuilder('f', 'form', null, array('csrf_protection' => false))
-            ->add($pager->getFormBuilder())
-            ->add('search', new SearchFormType())
-            ->getForm();
-        $form->bind($request);
-
-        if(!$form->isValid())
-        {
-            return $this->redirect($this->generateUrl('list2'));
-        }
-
-        //data
-        $pageSize = $pager->getPageSize();
-        $pageNo = $pager->getPageNo();
-        $viewData = array_slice($data, $pageSize*($pageNo-1), $pageSize);
-
-        $formView = $form->createView();
-        $pager->setAllFormView($formView);
-        $pager->setPagerFormView($formView[$pager->getFormName()]);
-        $pager->setLinkRouteName($request->get('_route'));//list2
-
-        return array(
-            'form' => $formView,
-            'pager' => $pager->createView(),
-            'datas' => $viewData,
-        );
-    }
-
-    /**
-     * DB,検索フォーム　検索ポストバックタイプ
-     * @Route("/list3", name="list3")
-     * @Template()
-     */
-    public function list3Action(Request $request)
-    {
-        $formFactory = $this->get('form.factory');
-        $pager = new Pager($formFactory);
 
         //
         $pager
@@ -159,68 +70,30 @@ class DefaultController extends Controller
                 'db_column_name' => 'created',
             ));
 
-        $form = $formFactory->createNamedBuilder('f', 'form', null, array('csrf_protection' => false))
-            ->add($pager->getFormBuilder())
-            ->add('search', new SearchFormType())
+        $form = $pager->getFormBuilder()
             ->getForm();
         $form->bind($request);
 
+        //pager
+        $formView = $form->createView();
+        $pager->setAllFormView($formView);
+        $pager->setPagerFormView($formView);
+        $pager->setLinkRouteName($request->get('_route'));//list2
+
         if(!$form->isValid())
         {
-            return $this->redirect($this->generateUrl('list3'));
+            return $this->redirect($this->generateUrl('list2'));
         }
 
         //data
         $pageSize = $pager->getPageSize();
         $pageNo = $pager->getPageNo();
-
-        //db
-        $queryBuilder = $this->getDoctrine()
-            ->getRepository('pingdecopongSampleBundle:SystemUser')
-            ->createQueryBuilder('u');
-
-        //検索
-        $data = $form->getData();
-        $searchName = $data['search']->getName();
-        if(isset($searchName))
-        {
-            $queryBuilder = $queryBuilder->andWhere('u.name LIKE :name')
-                ->setParameter('name', '%'.$searchName.'%');
-        }
-
-        //全件数取得
-        $queryBuilderCount = clone $queryBuilder;
-        $queryBuilderCount = $queryBuilderCount->select('count(u.id)');
-        $queryCount = $queryBuilderCount->getQuery();
-        $allCount = $queryCount->getSingleScalarResult();
-        $pager->setAllCount($allCount);
-
-        //ソート
-        $pageSortName = $pager->getSortName();
-        $pageSortType = $pager->getSortType();
-        if($pageSortName != null && $pageSortType != null)
-        {
-            $sortColumn = $pager->getColumn($pageSortName);
-            $queryBuilder = $queryBuilder->orderBy('u.'.$sortColumn['db_column_name'], $pageSortType);
-        }
-
-        //ページング
-        $queryBuilder = $queryBuilder->setFirstResult($pageSize*($pageNo-1))
-            ->setMaxResults($pageSize);
-
-        //クエリー実行
-        $entities = $queryBuilder->getQuery()->getResult();
-
-        //pager
-        $formView = $form->createView();
-        $pager->setAllFormView($formView);
-        $pager->setPagerFormView($formView[$pager->getFormName()]);
-        $pager->setLinkRouteName($request->get('_route'));//list3
+        $viewData = array_slice($entities, $pageSize*($pageNo-1), $pageSize);
 
         return array(
             'form' => $formView,
             'pager' => $pager->createView(),
-            'entities' => $entities,
+            'entities' => $viewData,
         );
     }
 
