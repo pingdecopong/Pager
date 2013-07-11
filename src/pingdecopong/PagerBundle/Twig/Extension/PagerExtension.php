@@ -31,47 +31,50 @@ class PagerExtension  extends \Twig_Extension
         );
     }
 
-    public function pagesizeRender($pager)
+    public function pagesizeRender($pager, $template = null)
     {
+        $template = $template ?: 'pingdecopongPagerBundle:Pager:defaultPagesize.html.twig';
+
         $data = array();
         $data['pager'] = $pager;
-//        $data['pagerformview'] = $pager->getFormView();
-        return $this->environment->render('pingdecopongPagerBundle:Pager:defaultPagesize.html.twig', $data);
+        return $this->environment->render($template, $data);
     }
 
-    public function hiddenRender($pager)
+    public function hiddenRender($pager, $template = null)
     {
+        $template = $template ?: 'pingdecopongPagerBundle:Pager:defaultHidden.html.twig';
+
         $data = array();
         $data['pager'] = $pager;
-//        $data['pagerformview'] = $pager->getFormView();
-        return $this->environment->render('pingdecopongPagerBundle:Pager:defaultHidden.html.twig', $data);
+        return $this->environment->render($template, $data);
     }
 
-    public function columnRender($pager)
+    public function columnRender($pager, $template = null)
     {
+        $template = $template ?: 'pingdecopongPagerBundle:Pager:defaultColumn.html.twig';
+
         $data = array();
         $data['pager'] = $pager;
-        return $this->environment->render('pingdecopongPagerBundle:Pager:defaultColumn.html.twig', $data);
+        return $this->environment->render($template, $data);
     }
 
-    public function selectorRender($pager)
+    public function selectorRender($pager, $template = null)
     {
+        $template = $template ?: 'pingdecopongPagerBundle:Pager:defaultSelector.html.twig';
+
         $data = array();
         $data['pager'] = $pager;
-//        $data[] = $pagination->getParams();
-        return $this->environment->render('pingdecopongPagerBundle:Pager:defaultSelector.html.twig', $data);
+        return $this->environment->render($template, $data);
     }
 
-    public function pagerRender($pager)
+    public function pagerRender($pager, $template = null)
     {
+        $template = $template ?: 'pingdecopongPagerBundle:Pager:defaultSelector.html.twig';
+
         $data = array();
         $data['pager'] = $pager;
-        return $this->environment->render('pingdecopongPagerBundle:Pager:defaultSelector.html.twig', $data);
+        return $this->environment->render($template, $data);
     }
-//    public function pagerRender($pagination, $template = null, array $queryParams = array(), array $viewParams = array())
-//    {
-//
-//    }
 
     public function getName()
     {

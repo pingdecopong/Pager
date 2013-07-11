@@ -414,11 +414,11 @@ class DefaultController extends Controller
         //pager1
         $pager->setAllFormView($formView);
         $pager->setPagerFormView($formView[$pager->getFormName()]);
-        $pager->setLinkRouteName($request->get('_route'));//list4
+        $pager->setLinkRouteName($request->get('_route'));//list5
         //pager2
         $pager2->setAllFormView($formView);
         $pager2->setPagerFormView($formView[$pager2->getFormName()]);
-        $pager2->setLinkRouteName($request->get('_route'));//list4
+        $pager2->setLinkRouteName($request->get('_route'));//list5
 
         if($request->isMethod('POST') && $form->isValid())
         {
@@ -439,6 +439,11 @@ class DefaultController extends Controller
             ->getRepository('pingdecopongSampleBundle:SystemUser')
             ->createQueryBuilder('u');
 
+        //db2
+        $queryBuilder2 = $this->getDoctrine()
+            ->getRepository('pingdecopongSampleBundle:SystemUser2')
+            ->createQueryBuilder('u2');
+
         //検索
         $data = $form->getData();
         //名前
@@ -456,12 +461,35 @@ class DefaultController extends Controller
                 ->setParameter('namekana', '%'.$searchNameKana.'%');
         }
 
+        //検索2
+        //名前2
+        $searchName2 = $data['search2']->getName();
+        if(isset($searchName2) && $form['search2']['name']->isValid())
+        {
+            $queryBuilder2 = $queryBuilder2->andWhere('u2.name LIKE :name')
+                ->setParameter('name', '%'.$searchName2.'%');
+        }
+        //カナ2
+        $searchNameKana2 = $data['search2']->getKana();
+        if(isset($searchNameKana2) && $form['search2']['kana']->isValid())
+        {
+            $queryBuilder2 = $queryBuilder2->andWhere('u2.namekana LIKE :namekana')
+                ->setParameter('namekana', '%'.$searchNameKana2.'%');
+        }
+
         //全件数取得
         $queryBuilderCount = clone $queryBuilder;
         $queryBuilderCount = $queryBuilderCount->select('count(u.id)');
         $queryCount = $queryBuilderCount->getQuery();
         $allCount = $queryCount->getSingleScalarResult();
         $pager->setAllCount($allCount);
+
+        //全件数取得2
+        $queryBuilderCount2 = clone $queryBuilder2;
+        $queryBuilderCount2 = $queryBuilderCount2->select('count(u2.id)');
+        $queryCount2 = $queryBuilderCount2->getQuery();
+        $allCount2 = $queryCount2->getSingleScalarResult();
+        $pager2->setAllCount($allCount2);
 
         //ソート
         $pageSortName = $pager->getSortName();
@@ -470,6 +498,15 @@ class DefaultController extends Controller
         {
             $sortColumn = $pager->getColumn($pageSortName);
             $queryBuilder = $queryBuilder->orderBy('u.'.$sortColumn['db_column_name'], $pageSortType);
+        }
+
+        //ソート2
+        $pageSortName2 = $pager2->getSortName();
+        $pageSortType2 = $pager2->getSortType();
+        if($pageSortName2 != null && $pageSortType2 != null)
+        {
+            $sortColumn2 = $pager2->getColumn($pageSortName2);
+            $queryBuilder2 = $queryBuilder2->orderBy('u2.'.$sortColumn2['db_column_name'], $pageSortType2);
         }
 
         //ページング
@@ -481,13 +518,27 @@ class DefaultController extends Controller
         $queryBuilder = $queryBuilder->setFirstResult($pageSize*($pageNo-1))
             ->setMaxResults($pageSize);
 
+        //ページング2
+        $pageSize2 = $pager2->getPageSize();
+        $pageNo2 = $pager2->getPageNo();
+        if($pager2->getMaxPageNum() < $pageNo2){
+            return $this->redirect($this->generateUrl('list5'));
+        }
+        $queryBuilder2 = $queryBuilder2->setFirstResult($pageSize2*($pageNo2-1))
+            ->setMaxResults($pageSize2);
+
         //クエリー実行
         $entities = $queryBuilder->getQuery()->getResult();
+
+        //クエリー実行2
+        $entities2 = $queryBuilder2->getQuery()->getResult();
 
         return array(
             'form' => $formView,
             'pager' => $pager->createView(),
+            'pager2' => $pager2->createView(),
             'entities' => $entities,
+            'entities2' => $entities2,
         );
     }
 
