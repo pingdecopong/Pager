@@ -1,0 +1,22 @@
+{
+    "name": "pingdecopong/PagerBundle",
+    "version": "0.0.1",
+    "type": "symfony-bundle",
+    "description": "pager bundle.",
+    "keywords": ["pager"],
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "authors": [
+        {
+            "name": "pingdecopong",
+            "homepage": "https://github.com/pingdecopong"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.2"
+    },
+    "autoload": {
+        "psr-0": { "pingdecopong\\PagerBundle": "" }
+    },
+    "target-dir": "pingdecopong/PagerBundle"
+}
