@@ -18,7 +18,9 @@
 
     <table>
         <thead>
-        {{ pdp_pager_column_render(pager) }}
+            <tr>
+                {{ pdp_pager_column_render(pager) }}
+            </tr>
         </thead>
         <tbody>
         {% for entity in entities %}
