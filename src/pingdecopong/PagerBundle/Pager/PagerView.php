@@ -41,6 +41,27 @@ class PagerView {
     private $linkRouteName;
 
     /**
+     * @var int
+     */
+    private $allCount;
+
+    /**
+     * @param int $allCount
+     */
+    public function setAllCount($allCount)
+    {
+        $this->allCount = $allCount;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAllCount()
+    {
+        return $this->allCount;
+    }
+
+    /**
      * @var array
      */
     private $pageSizeParamList;

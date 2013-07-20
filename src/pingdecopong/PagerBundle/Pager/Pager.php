@@ -192,6 +192,9 @@ class Pager {
         //pager form view
         $pagerView->setPagerFormView($this->pagerFormView);
 
+        //all count
+        $pagerView->setAllCount($this->pagerSelector->getAllCount());
+
         //ページ番号クリック時のリンクパラメータ作成
         $queryAllData = $this->getAllFormQueryStrings();
         $queryPagerData = $this->getPagerFormQueryKeyStrings();
