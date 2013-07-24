@@ -40,12 +40,12 @@ class DefaultController extends Controller
 
         //data
         $entities = array();
-        for($i=0; $i<100; $i++)
+        for($i=0; $i<164; $i++)
         {
             $entities[$i]['id'] = $i;
             $entities[$i]['name'] = $i;
         }
-        $pager->setAllCount(100);
+        $pager->setAllCount(count($entities));
 
         //
         $pager
@@ -79,6 +79,7 @@ class DefaultController extends Controller
         $pager->setAllFormView($formView);
         $pager->setPagerFormView($formView);
         $pager->setLinkRouteName($request->get('_route'));//list2
+        $pager->setMaxSelector(14);
 
         if(!$form->isValid())
         {
